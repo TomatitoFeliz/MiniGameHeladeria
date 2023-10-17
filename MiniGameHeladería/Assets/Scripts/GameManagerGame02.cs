@@ -16,7 +16,7 @@ public class GameManagerGame02 : MonoBehaviour
     [SerializeField]
     Image redPI01, redPI02, redMI;
     [SerializeField]
-    TextMeshProUGUI timerText;
+    Slider timerSlider;
 
     void Start()
     {
@@ -25,11 +25,15 @@ public class GameManagerGame02 : MonoBehaviour
 
         win.SetActive(false);
         loose.SetActive(false);
+
+        timerSlider.minValue = 0;
+        timerSlider.maxValue = timerActive;
     }
 
     void Update()
     {
         //Sistema de temporizador de cada ronda:
+        timerSlider.value = timerActive;
         timerActive -= Time.deltaTime;
         if (timerActive < 0)
         {
@@ -77,17 +81,20 @@ public class GameManagerGame02 : MonoBehaviour
                 maquina = Random.Range(2, 8);
                 timer = timer - 0.25f;
                 timerActive = timer;
+                timerSlider.maxValue = timerActive;
             }
             else if (player01 == player02 && player01 == maquina)
             {
                 maquina = Random.Range(2, 8);
                 timer = timer - 0.25f;
                 timerActive = timer;
+                timerSlider.maxValue = timerActive;
+            }
+            else if (player01 == player02 && player01 != maquina)
+            {
+                Loose();
             }
         }
-
-        timerText.text = timerActive.ToString("00.00");
-        Debug.Log(timerActive.ToString("00.00"));
 
         //Estétic:
         if (maquina == 2)

@@ -1,10 +1,12 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 
 public class MenúPincipalGameManager : MonoBehaviour
 {
+    [SerializeField]
+    Button xButton, menuButton;
     [SerializeField]
     GameObject tutorialCanvas, sonidoCanvas, recuadroMenu;
 
@@ -12,6 +14,12 @@ public class MenúPincipalGameManager : MonoBehaviour
     {
         recuadroMenu.SetActive(false);
     }
+    private void OutAnimation()
+    {
+        xButton.interactable = true;
+        menuButton.interactable = true;
+    }
+
     public void StarLevels()
     {
         SceneManager.LoadScene("Game01");
@@ -19,15 +27,18 @@ public class MenúPincipalGameManager : MonoBehaviour
     public void Ajustes()
     {
         recuadroMenu.SetActive(true);
+        xButton.interactable = false;
+        menuButton.interactable = false;
         if (recuadroMenu != null)
         {
-            LeanTween.moveLocalX(recuadroMenu, -520f, 1.5f).setEaseInBounce();
+            LeanTween.moveLocalX(recuadroMenu, -709f, 1.5f).setEaseOutQuart().setOnComplete(OutAnimation);
         }
     }
     public void SalirMenu()
     {
-        LeanTween.moveLocalX(recuadroMenu, -882, 1.5f).setEaseInBounce().setOnComplete(Start);
-        
+        xButton.interactable = false;
+        menuButton.interactable = false;
+        LeanTween.moveLocalX(recuadroMenu, -1347f, 2f).setEaseInCubic().setOnComplete(Start).setOnComplete(OutAnimation);
     }
     public void Sonido()
     {
