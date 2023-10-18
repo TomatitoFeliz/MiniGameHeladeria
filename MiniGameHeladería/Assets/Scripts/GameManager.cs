@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public float speed;
     bool animationON = false;
 
+    bool inputLocker;
     [SerializeField]
     UnityEngine.UI.Image redMI;
     [SerializeField]
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        inputLocker = true;
         canvasBasic.SetActive(false);
         Time.timeScale = 0f; 
 
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                inputLocker = false;
                 canvasBasic.SetActive(true);
                 canvasTuto.SetActive(false);
                 Time.timeScale = 1f;
@@ -88,7 +91,7 @@ public class GameManager : MonoBehaviour
 
 
         //Sistema de Gameplay:
-        if (Input.GetKeyDown(KeyCode.Q) & results == false)
+        if (Input.GetKeyDown(KeyCode.Q) & results == false && inputLocker != true)
         {
             if (player != 2)
             {
@@ -99,7 +102,7 @@ public class GameManager : MonoBehaviour
                 player = 0;
             }
         }
-        if (Input.GetKeyDown(KeyCode.A) & results == false)
+        if (Input.GetKeyDown(KeyCode.A) & results == false && inputLocker != true)
         {
             if (player != 0)
             {
@@ -110,7 +113,7 @@ public class GameManager : MonoBehaviour
                 player = 2;
             }
         }
-        if (Input.GetKeyDown(KeyCode.E) & results == false)
+        if (Input.GetKeyDown(KeyCode.E) & results == false && inputLocker != true)
         {
             if (maquina != player)
             {
@@ -155,6 +158,7 @@ public class GameManager : MonoBehaviour
     }
     void CupAnimation()
     {
+        inputLocker = true;
         LeanTween.move(cup01, new Vector3(-2.936f, 0.026f, 8.97f), 1.5f).setOnComplete(() => {
             Destroy(cup01);
         });
@@ -168,6 +172,7 @@ public class GameManager : MonoBehaviour
             timerActive = timer;
             timerSlider.maxValue = timerActive;
             animationON = false;
+            inputLocker = false;
         });
     }
 }
