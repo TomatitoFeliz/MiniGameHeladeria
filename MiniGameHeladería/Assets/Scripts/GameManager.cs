@@ -15,12 +15,13 @@ public class GameManager : MonoBehaviour
     private float timerActive;
 
     [SerializeField]
-    GameObject win, loose, luzB, luzR, luzY, butonB, butonR, butonY;
+    GameObject win, loose, luzB, luzR, luzY, butonB, butonR, butonY, canvasBasic, canvasTuto;
 
     //Animation:
     [SerializeField]
-    GameObject cup01, cup02;
+    GameObject cup01, cup02, copyCup02;
     public float speed;
+    bool animationON = false;
 
     [SerializeField]
     UnityEngine.UI.Image redMI;
@@ -31,6 +32,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        canvasBasic.SetActive(false);
+        Time.timeScale = 0f; 
+
         luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(false);
 
         timerActive = timer;
@@ -45,10 +49,24 @@ public class GameManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
+    {
+        //Tutorial:
+        if (canvasTuto.activeInHierarchy == true)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                canvasBasic.SetActive(true);
+                canvasTuto.SetActive(false);
+                Time.timeScale = 1f;
+            }
+        }
+
         //Sistema de temporizador de cada ronda:
         timerSlider.value = timerActive;
-        timerActive -= Time.deltaTime;
+        if (animationON == false)
+        {
+            timerActive -= Time.deltaTime;
+        }
 
         if (timerActive < 0)
         {
@@ -56,6 +74,7 @@ public class GameManager : MonoBehaviour
         }
         else if (timer <= 0.75f)
         {
+            canvasBasic.SetActive(false);
             win.SetActive(true);
             results = true;
             Time.timeScale = 0f;
@@ -80,6 +99,17 @@ public class GameManager : MonoBehaviour
                 player = 0;
             }
         }
+        if (Input.GetKeyDown(KeyCode.A) & results == false)
+        {
+            if (player != 0)
+            {
+                player--;
+            }
+            else if (player == 0)
+            {
+                player = 2;
+            }
+        }
         if (Input.GetKeyDown(KeyCode.E) & results == false)
         {
             if (maquina != player)
@@ -89,6 +119,7 @@ public class GameManager : MonoBehaviour
             else if (maquina == player)
             {
                 CupAnimation();
+                animationON = true;
             }
         }
 
@@ -121,22 +152,22 @@ public class GameManager : MonoBehaviour
             butonB.GetComponent<MeshRenderer>().material = blue; butonR.GetComponent<MeshRenderer>().material = normal; butonY.GetComponent<MeshRenderer>().material = normal;
             luzB.SetActive(true); luzR.SetActive(false); luzY.SetActive(false);
         }
-        void CupAnimation()
-        {
-            Time.timeScale = 0;
-            LeanTween.moveLocal(cup01, Vector3.right * speed, 3f).setOnComplete(() => {
-                cup01.IsDestroyed();
-                cup02 = cup01;
-            });
-            Instantiate(cup02, Vector3.zero, Quaternion.identity);
-            LeanTween.moveLocal(cup02, Vector3.left * speed, 3f).setOnComplete(() => {
-                Time.timeScale = 1;
-                maquina = Random.Range(0, 3);
-                timer = timer - 0.25f;
-                timerActive = timer;
-                timerSlider.maxValue = timerActive;
-            });
-        }
     }
-
+    void CupAnimation()
+    {
+        LeanTween.move(cup01, new Vector3(-2.936f, 0.026f, 8.97f), 1.5f).setOnComplete(() => {
+            Destroy(cup01);
+        });
+        Instantiate(copyCup02, new Vector3(1.192f, 0.026f, 8.97f), Quaternion.identity);
+        cup02 = GameObject.Find("BasoGranizado(Clone)");
+        cup02.name = "cup02";
+        LeanTween.move(cup02, new Vector3(-0.81f, 0.026f, 8.97f), 1.5f).setOnComplete(() => {
+            cup01 = cup02;
+            maquina = Random.Range(0, 3);
+            timer = timer - 0.25f;
+            timerActive = timer;
+            timerSlider.maxValue = timerActive;
+            animationON = false;
+        });
+    }
 }
