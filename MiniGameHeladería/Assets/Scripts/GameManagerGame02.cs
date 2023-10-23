@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UIElements;
+using Slider = UnityEngine.UI.Slider;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManagerGame02 : MonoBehaviour
 {
@@ -12,14 +16,30 @@ public class GameManagerGame02 : MonoBehaviour
     private float timerActive;
 
     [SerializeField]
-    GameObject win, loose;
+    GameObject win, loose, luzB, luzR, luzY, butonB01, butonB02, butonR01, butonR02, butonY01, butonY02, canvasBasic, canvasTuto;
+
+    //Animation:
     [SerializeField]
-    Image redPI01, redPI02, redMI;
+    GameObject cup01, cup02, copyCup02;
+    public float speed;
+    bool animationON = false;
+
+    bool inputLocker;
+    [SerializeField]
+    UnityEngine.UI.Image redMI;
     [SerializeField]
     Slider timerSlider;
+    [SerializeField]
+    Material normal, blue, red, yellow;
 
     void Start()
     {
+        inputLocker = true;
+        canvasBasic.SetActive(false);
+        Time.timeScale = 0f;
+
+        luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(false);
+
         timerActive = timer;
         maquina = Random.Range(2, 8);
 
@@ -30,25 +50,58 @@ public class GameManagerGame02 : MonoBehaviour
         timerSlider.maxValue = timerActive;
     }
 
+    IEnumerator Win()
+    {
+        timerActive = 40;
+        canvasBasic.SetActive(false);
+        win.SetActive(true);
+        results = true;
+
+        yield return new WaitForSeconds(3);
+
+        SceneManager.LoadScene("Game03");
+    }
+
     void Update()
     {
+        //Tutorial:
+        if (canvasTuto.activeInHierarchy == true)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                inputLocker = false;
+                canvasBasic.SetActive(true);
+                canvasTuto.SetActive(false);
+                Time.timeScale = 1f;
+            }
+        }
+
         //Sistema de temporizador de cada ronda:
         timerSlider.value = timerActive;
-        timerActive -= Time.deltaTime;
+        if (animationON == false)
+        {
+            timerActive -= Time.deltaTime;
+        }
+
         if (timerActive < 0)
         {
             Loose();
         }
         else if (timer <= 1.75f)
         {
-            win.SetActive(true);
+            StartCoroutine ("Win");
+        }
+        void Loose()
+        {
+            canvasBasic.SetActive(false);
+            loose.SetActive(true);
             results = true;
             Time.timeScale = 0f;
         }
 
 
         //Sistema de Gameplay:
-        if (Input.GetKeyDown(KeyCode.Q) & results == false)
+        if (Input.GetKeyDown(KeyCode.Q) & results == false && inputLocker != true)
         {
             if (player01 != 4)
             {
@@ -59,7 +112,19 @@ public class GameManagerGame02 : MonoBehaviour
                 player01 = 2;
             }
         }
-        if (Input.GetKeyDown(KeyCode.W) & results == false)
+        if (Input.GetKeyDown(KeyCode.A) & results == false && inputLocker != true)
+        {
+            if (player01 != 2)
+            {
+                player01--;
+            }
+            else if (player01 == 2)
+            {
+                player01 = 4;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.W) & results == false && inputLocker != true)
         {
             if (player02 != 4)
             {
@@ -70,7 +135,19 @@ public class GameManagerGame02 : MonoBehaviour
                 player02 = 2;
             }
         }
-        if (Input.GetKeyDown(KeyCode.E) & results == false)
+        if (Input.GetKeyDown(KeyCode.S) & results == false && inputLocker != true)
+        {
+            if (player02 != 2)
+            {
+                player02--;
+            }
+            else if (player02 == 2)
+            {
+                player02 = 4;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E) & results == false && inputLocker != true)
         {
             if (maquina != (player01 + player02) && player01 != player02)
             {
@@ -78,17 +155,13 @@ public class GameManagerGame02 : MonoBehaviour
             }
             else if (maquina != 2 && maquina != 3 && maquina != 4 && maquina == (player01 + player02) && player01 != player02)
             {
-                maquina = Random.Range(2, 8);
-                timer = timer - 0.25f;
-                timerActive = timer;
-                timerSlider.maxValue = timerActive;
+                CupAnimation();
+                animationON = true;
             }
             else if (player01 == player02 && player01 == maquina)
             {
-                maquina = Random.Range(2, 8);
-                timer = timer - 0.25f;
-                timerActive = timer;
-                timerSlider.maxValue = timerActive;
+                CupAnimation();
+                animationON = true;
             }
             else if (player01 == player02 && player01 != maquina)
             {
@@ -111,11 +184,11 @@ public class GameManagerGame02 : MonoBehaviour
         }
         else if (maquina == 5)
         {
-            redMI.color = Color.cyan;
+            redMI.color = new Color32(255, 96, 0, 255);
         }
         else if (maquina == 6)
         {
-            redMI.color = Color.magenta;
+            redMI.color = new Color32(149, 0, 255, 255);
         }
         else if (maquina == 7)
         {
@@ -124,36 +197,80 @@ public class GameManagerGame02 : MonoBehaviour
 
         if (player01 == 2)
         {
-            redPI01.color = Color.red;
+            butonB01.GetComponent<MeshRenderer>().material = normal; butonR01.GetComponent<MeshRenderer>().material = red; butonY01.GetComponent<MeshRenderer>().material = normal;
+            luzR.SetActive(true);
         }
-        else if (player01 == 3)
+        else if (player02 != 2)
         {
-            redPI01.color = Color.yellow;
+            luzR.SetActive(false);
         }
-        else if (player01 == 4)
+        if (player01 == 3)
         {
-            redPI01.color = Color.blue;
+            butonB01.GetComponent<MeshRenderer>().material = normal; butonR01.GetComponent<MeshRenderer>().material = normal; butonY01.GetComponent<MeshRenderer>().material = yellow;
+            luzY.SetActive(true);
+        }
+        else if (player02 != 3)
+        {
+            luzY.SetActive(false);
+        }
+        if (player01 == 4)
+        {
+            butonB01.GetComponent<MeshRenderer>().material = blue; butonR01.GetComponent<MeshRenderer>().material = normal; butonY01.GetComponent<MeshRenderer>().material = normal;
+            luzB.SetActive(true);
+        }
+        else if (player02 != 4)
+        {
+            luzB.SetActive(false);
         }
 
         if (player02 == 2)
         {
-            redPI02.color = Color.red;
+            butonB02.GetComponent<MeshRenderer>().material = normal; butonR02.GetComponent<MeshRenderer>().material = red; butonY02.GetComponent<MeshRenderer>().material = normal;
+            luzR.SetActive(true);
         }
-        else if (player02 == 3)
+        else if (player01 != 2)
         {
-            redPI02.color = Color.yellow;
+            luzR.SetActive(false);
         }
-        else if (player02 == 4)
+        if (player02 == 3)
         {
-            redPI02.color = Color.blue;
+            butonB02.GetComponent<MeshRenderer>().material = normal; butonR02.GetComponent<MeshRenderer>().material = normal; butonY02.GetComponent<MeshRenderer>().material = yellow;
+            luzY.SetActive(true);
+        }
+        else if (player01 != 3)
+        {
+            luzY.SetActive(false);
+        }
+        if (player02 == 4)
+        {
+            butonB02.GetComponent<MeshRenderer>().material = blue; butonR02.GetComponent<MeshRenderer>().material = normal; butonY02.GetComponent<MeshRenderer>().material = normal;
+            luzB.SetActive(true);
+        }
+        else if (player01 != 4)
+        {
+            luzB.SetActive(false);
         }
     }
 
-    void Loose()
+    void CupAnimation()
     {
-        loose.SetActive(true);
-        results = true;
-        Time.timeScale = 0f;
+        inputLocker = true;
+        LeanTween.move(cup01, new Vector3(-2.936f, 0.026f, 8.97f), 1.5f).setOnComplete(() =>
+        {
+            Destroy(cup01);
+        });
+        Instantiate(copyCup02, new Vector3(1.192f, 0.026f, 8.97f), Quaternion.identity);
+        cup02 = GameObject.Find("BasoGranizado(Clone)");
+        cup02.name = "cup02";
+        LeanTween.move(cup02, new Vector3(-0.81f, 0.026f, 8.97f), 1.5f).setOnComplete(() =>
+        {
+            cup01 = cup02;
+            maquina = Random.Range(2, 8);
+            timer = timer - 0.75f;
+            timerActive = timer;
+            timerSlider.maxValue = timerActive;
+            animationON = false;
+            inputLocker = false;
+        });
     }
-
 }

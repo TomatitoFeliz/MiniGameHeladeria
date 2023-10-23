@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -49,7 +51,18 @@ public class GameManager : MonoBehaviour
         timerSlider.maxValue = timerActive;
     }
 
-    // Update is called once per frame
+    IEnumerator Win()
+    {
+        timerActive = 40;
+        canvasBasic.SetActive(false);
+        win.SetActive(true);
+        results = true;
+
+        yield return new WaitForSeconds(3);
+
+        SceneManager.LoadScene("Game02");
+    }
+
     void Update()
     {
         //Tutorial:
@@ -77,13 +90,11 @@ public class GameManager : MonoBehaviour
         }
         else if (timer <= 0.75f)
         {
-            canvasBasic.SetActive(false);
-            win.SetActive(true);
-            results = true;
-            Time.timeScale = 0f;
+            StartCoroutine("Win");
         }
         void Loose()
         {
+            canvasBasic.SetActive(false);
             loose.SetActive(true);
             results = true;
             Time.timeScale = 0f;
