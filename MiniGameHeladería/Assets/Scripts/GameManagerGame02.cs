@@ -34,9 +34,12 @@ public class GameManagerGame02 : MonoBehaviour
 
     void Start()
     {
-        inputLocker = true;
-        canvasBasic.SetActive(false);
-        Time.timeScale = 0f;
+        if (PlayerPrefs.GetInt("tutorial02") != 1)
+        {
+            inputLocker = true;
+            canvasBasic.SetActive(false);
+            Time.timeScale = 0f;
+        }
 
         luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(false);
 
@@ -56,6 +59,7 @@ public class GameManagerGame02 : MonoBehaviour
         canvasBasic.SetActive(false);
         win.SetActive(true);
         results = true;
+        PlayerPrefs.SetInt("ganado02", 1);
 
         yield return new WaitForSeconds(3);
 
@@ -64,6 +68,12 @@ public class GameManagerGame02 : MonoBehaviour
 
     void Update()
     {
+        //ExitLvl:
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("MenuPrincipal");
+        }
+
         //Tutorial:
         if (canvasTuto.activeInHierarchy == true)
         {
@@ -73,6 +83,7 @@ public class GameManagerGame02 : MonoBehaviour
                 canvasBasic.SetActive(true);
                 canvasTuto.SetActive(false);
                 Time.timeScale = 1f;
+                PlayerPrefs.SetInt("tutorial02", 1);
             }
         }
 
@@ -93,10 +104,10 @@ public class GameManagerGame02 : MonoBehaviour
         }
         void Loose()
         {
+            inputLocker = true;
             canvasBasic.SetActive(false);
             loose.SetActive(true);
             results = true;
-            Time.timeScale = 0f;
         }
 
 
@@ -272,5 +283,15 @@ public class GameManagerGame02 : MonoBehaviour
             animationON = false;
             inputLocker = false;
         });
+    }
+
+    //Loose:
+    public void Repeat()
+    {
+        SceneManager.LoadScene("Game02");
+    }
+    public void Exit()
+    {
+        SceneManager.LoadScene("MenuPrincipal");
     }
 }

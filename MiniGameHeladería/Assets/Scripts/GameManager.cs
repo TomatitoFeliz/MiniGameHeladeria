@@ -35,9 +35,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        inputLocker = true;
-        canvasBasic.SetActive(false);
-        Time.timeScale = 0f; 
+        if (PlayerPrefs.GetInt("tutorial01") != 1)
+        {
+            canvasTuto.SetActive(true);
+            inputLocker = true;
+            canvasBasic.SetActive(false);
+            Time.timeScale = 0f;
+        }
 
         luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(false);
 
@@ -50,13 +54,14 @@ public class GameManager : MonoBehaviour
         timerSlider.minValue = 0;
         timerSlider.maxValue = timerActive;
     }
-
+    
     IEnumerator Win()
     {
         timerActive = 40;
         canvasBasic.SetActive(false);
         win.SetActive(true);
         results = true;
+        PlayerPrefs.SetInt("ganado01", 1);
 
         yield return new WaitForSeconds(3);
 
@@ -65,6 +70,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        //ExitLvl:
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("MenuPrincipal");
+        }
+
         //Tutorial:
         if (canvasTuto.activeInHierarchy == true)
         {
@@ -74,6 +85,7 @@ public class GameManager : MonoBehaviour
                 canvasBasic.SetActive(true);
                 canvasTuto.SetActive(false);
                 Time.timeScale = 1f;
+                PlayerPrefs.SetInt("tutorial01", 1);
             }
         }
 
@@ -94,10 +106,10 @@ public class GameManager : MonoBehaviour
         }
         void Loose()
         {
+            inputLocker = true;
             canvasBasic.SetActive(false);
             loose.SetActive(true);
             results = true;
-            Time.timeScale = 0f;
         }
 
 
@@ -185,5 +197,15 @@ public class GameManager : MonoBehaviour
             animationON = false;
             inputLocker = false;
         });
+    }
+
+    //Loose:
+    public void Repeat()
+    {
+        SceneManager.LoadScene("Game01");
+    }
+    public void Exit()
+    {
+        SceneManager.LoadScene("MenuPrincipal");
     }
 }

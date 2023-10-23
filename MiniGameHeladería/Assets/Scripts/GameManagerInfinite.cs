@@ -4,17 +4,16 @@ using TMPro;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class GameManagerGame03 : MonoBehaviour
+public class GameManagerInfinite : MonoBehaviour
 {
     int maquina;
     int player01 = 2;
     int player02 = 2;
     bool results = false;
-    public float timer = 5f;
-    private float timerActive;
+    public float timerActive = 20;
 
     [SerializeField]
-    GameObject win, loose, luzB, luzR, luzY, luzBlack, butonB01, butonB02, butonR01, butonR02, butonY01, butonY02, buttonBlack, canvasBasic, canvasTuto;
+    GameObject loose, luzB, luzR, luzY, luzBlack, butonB01, butonB02, butonR01, butonR02, butonY01, butonY02, buttonBlack, canvasBasic, canvasTuto;
 
     //Animation:
     [SerializeField]
@@ -29,22 +28,12 @@ public class GameManagerGame03 : MonoBehaviour
     Slider timerSlider;
     [SerializeField]
     Material normal, blue, red, yellow, black;
-    IEnumerator Win()
-    {
-        timerActive = 40;
-        canvasBasic.SetActive(false);
-        win.SetActive(true);
-        results = true;
-        PlayerPrefs.SetInt("ganado03", 1);
-
-        yield return new WaitForSeconds(3);
-
-        SceneManager.LoadScene("MenuPrincipal");
-    }
+    [SerializeField]
+    TextMeshProUGUI record;
 
     void Start()
     {
-        if (PlayerPrefs.GetInt("tutorial03") != 1)
+        if (PlayerPrefs.GetInt("tutorialinfinite") != 1)
         {
             inputLocker = true;
             canvasBasic.SetActive(false);
@@ -53,10 +42,8 @@ public class GameManagerGame03 : MonoBehaviour
 
         luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(false); luzBlack.SetActive(false);
 
-        timerActive = timer;
         maquina = Random.Range(2, 9);
 
-        win.SetActive(false);
         loose.SetActive(false);
 
         timerSlider.minValue = 0;
@@ -91,7 +78,7 @@ public class GameManagerGame03 : MonoBehaviour
                 canvasBasic.SetActive(true);
                 canvasTuto.SetActive(false);
                 Time.timeScale = 1f;
-                PlayerPrefs.SetInt("tutorial03", 1);
+                PlayerPrefs.SetInt("tutorialinfinite", 1);
             }
         }
 
@@ -102,16 +89,13 @@ public class GameManagerGame03 : MonoBehaviour
             timerActive -= Time.deltaTime;
         }
 
-        if (timerActive < 0)
+        if (timerActive <= 0)
         {
-            Loose();
+            End();
         }
-        else if (timer <= 1.75f)
+        void End()
         {
-            StartCoroutine("Win");
-        }
-        void Loose()
-        {
+            record.text = ("Record: " + Time.time.ToString("00.00"));
             inputLocker = true;
             canvasBasic.SetActive(false);
             loose.SetActive(true);
@@ -170,21 +154,23 @@ public class GameManagerGame03 : MonoBehaviour
         {
             if (maquina != (player01 + player02) && player01 != player02)
             {
-                Loose();
+                CupAnimationError();
+                animationON = true;
             }
             else if (maquina != 2 && maquina != 3 && maquina != 4 && maquina == (player01 + player02) && player01 != player02)
             {
-                CupAnimation();
+                CupAnimationAcierto();
                 animationON = true;
             }
             else if (player01 == player02 && player01 == maquina)
             {
-                CupAnimation();
+                CupAnimationAcierto();
                 animationON = true;
             }
             else if (player01 == player02 && player01 != maquina)
             {
-                Loose();
+                CupAnimationError();
+                animationON = true;
             }
         }
 
@@ -194,12 +180,13 @@ public class GameManagerGame03 : MonoBehaviour
 
             if (maquina == 8)
             {
-                CupAnimation();
+                CupAnimationAcierto();
                 animationON = true;
             }
             else if (maquina != 8)
             {
-                Loose();
+                CupAnimationError();
+                animationON = true;
             }
         }
 
@@ -233,7 +220,7 @@ public class GameManagerGame03 : MonoBehaviour
             redMI.color = Color.black;
         }
 
-       if (player01 == 2)
+        if (player01 == 2)
         {
             butonB01.GetComponent<MeshRenderer>().material = normal; butonR01.GetComponent<MeshRenderer>().material = red; butonY01.GetComponent<MeshRenderer>().material = normal;
             luzR.SetActive(true);
@@ -289,7 +276,7 @@ public class GameManagerGame03 : MonoBehaviour
             luzB.SetActive(false);
         }
     }
-    void CupAnimation()
+    void CupAnimationAcierto()
     {
         inputLocker = true;
         LeanTween.move(cup01, new Vector3(-2.936f, 0.026f, 8.97f), 1.5f).setOnComplete(() =>
@@ -303,8 +290,27 @@ public class GameManagerGame03 : MonoBehaviour
         {
             cup01 = cup02;
             maquina = Random.Range(2, 9);
-            timer = timer - 0.75f;
-            timerActive = timer;
+            timerActive = timerActive + 0.5f;
+            timerSlider.maxValue = timerActive;
+            animationON = false;
+            inputLocker = false;
+        });
+    }
+    void CupAnimationError()
+    {
+        inputLocker = true;
+        LeanTween.move(cup01, new Vector3(-2.936f, 0.026f, 8.97f), 1.5f).setOnComplete(() =>
+        {
+            Destroy(cup01);
+        });
+        Instantiate(copyCup02, new Vector3(1.192f, 0.026f, 8.97f), Quaternion.identity);
+        cup02 = GameObject.Find("BasoGranizado(Clone)");
+        cup02.name = "cup02";
+        LeanTween.move(cup02, new Vector3(-0.81f, 0.026f, 8.97f), 1.5f).setOnComplete(() =>
+        {
+            cup01 = cup02;
+            maquina = Random.Range(2, 9);
+            timerActive = timerActive - 0.5f;
             timerSlider.maxValue = timerActive;
             animationON = false;
             inputLocker = false;
@@ -314,7 +320,7 @@ public class GameManagerGame03 : MonoBehaviour
     //Loose:
     public void Repeat()
     {
-        SceneManager.LoadScene("Game03");
+        SceneManager.LoadScene("Infinite");
     }
     public void Exit()
     {

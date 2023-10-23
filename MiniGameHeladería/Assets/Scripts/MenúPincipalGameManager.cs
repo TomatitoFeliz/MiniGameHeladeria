@@ -8,7 +8,9 @@ public class MenúPincipalGameManager : MonoBehaviour
     [SerializeField]
     Button xButton, menuButton;
     [SerializeField]
-    GameObject tutorialCanvas, sonidoCanvas, recuadroMenu;
+    GameObject tutorialCanvas, sonidoCanvas, recuadroMenu, fondoLvlSelection, lvl1, lvl2, lvl3, infinite, xButtonLvl;
+    [SerializeField]
+    Image lvlFondo;
 
     private void Start()
     {
@@ -22,8 +24,36 @@ public class MenúPincipalGameManager : MonoBehaviour
 
     public void StarLevels()
     {
-        SceneManager.LoadScene("Game01");
+        fondoLvlSelection.SetActive(true);
+        LeanTween.value(fondoLvlSelection, 0, 1, 2).setEaseOutQuart()
+            .setOnUpdate((value) =>
+        {
+            lvlFondo.fillAmount = value;
+        })
+            .setOnComplete(() => 
+        { 
+            lvl1.SetActive(true); 
+            lvl2.SetActive(true); 
+            lvl3.SetActive(true); 
+            infinite.SetActive(true);
+            xButtonLvl.SetActive(true);
+        });
+        //.LoadScene("Game01");
     }
+    public void ExitLevels()
+    {
+        lvl1.SetActive(false);
+        lvl2.SetActive(false);
+        lvl3.SetActive(false);
+        infinite.SetActive(false);
+        xButtonLvl.SetActive(false);
+        LeanTween.value(fondoLvlSelection, 1, 0, 2).setEaseOutQuart()
+           .setOnUpdate((value) =>
+           {
+               lvlFondo.fillAmount = value;
+           }).setOnComplete(() => { fondoLvlSelection.SetActive(false); });
+    } 
+
     public void Ajustes()
     {
         recuadroMenu.SetActive(true);
@@ -65,5 +95,39 @@ public class MenúPincipalGameManager : MonoBehaviour
     public void Salir()
     {
         Application.Quit();
+    }
+
+    //LVLs:
+    public void LVL1()
+    {
+        SceneManager.LoadScene("Game01");
+    }
+    public void LVL2()
+    {
+        SceneManager.LoadScene("Game02");
+    }
+    public void LVL3()
+    {
+        SceneManager.LoadScene("Game03");
+    }
+    public void Infinite()
+    {
+        SceneManager.LoadScene("Infinite");
+    }
+
+    private void Update()
+    {
+        if (PlayerPrefs.GetInt("ganado01") == 1)
+        {
+            lvl2.GetComponent<Button>().interactable = true;
+        }
+        if (PlayerPrefs.GetInt("ganado02") == 1)
+        {
+            lvl3.GetComponent<Button>().interactable = true;
+        }
+        if (PlayerPrefs.GetInt("ganado03") == 1)
+        {
+            infinite.GetComponent<Button>().interactable = true;
+        }
     }
 }

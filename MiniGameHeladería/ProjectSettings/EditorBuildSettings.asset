@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game03.unity
     guid: 5a0b86ecd3f29f14882d0add5d5757d9
+  - enabled: 1
+    path: Assets/Scenes/Infinite.unity
+    guid: 9470563da723fac439dc391a98d45e82
   m_configObjects: {}
