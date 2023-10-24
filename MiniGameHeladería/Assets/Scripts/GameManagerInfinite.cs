@@ -10,15 +10,14 @@ public class GameManagerInfinite : MonoBehaviour
     int player01 = 2;
     int player02 = 2;
     bool results = false;
-    public float timerActive = 20;
+    public float timerActive = 20f;
 
     [SerializeField]
     GameObject loose, luzB, luzR, luzY, luzBlack, butonB01, butonB02, butonR01, butonR02, butonY01, butonY02, buttonBlack, canvasBasic, canvasTuto;
 
     //Animation:
     [SerializeField]
-    GameObject cup01, cup02, copyCup02;
-    public float speed;
+    GameObject cup01, cup02, copyCup02, camara;
     bool animationON = false;
 
     bool inputLocker;
@@ -29,14 +28,19 @@ public class GameManagerInfinite : MonoBehaviour
     [SerializeField]
     Material normal, blue, red, yellow, black;
     [SerializeField]
-    TextMeshProUGUI record;
+    TextMeshProUGUI máxRecord, record;
+
+    float recordTiempo;
 
     void Start()
     {
+        camara.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("sonido");
+        Time.timeScale = 1f;
         if (PlayerPrefs.GetInt("tutorialinfinite") != 1)
         {
             inputLocker = true;
             canvasBasic.SetActive(false);
+            canvasTuto.SetActive(true);
             Time.timeScale = 0f;
         }
 
@@ -95,7 +99,22 @@ public class GameManagerInfinite : MonoBehaviour
         }
         void End()
         {
-            record.text = ("Record: " + Time.time.ToString("00.00"));
+            Time.timeScale = 0f;
+            recordTiempo = Time.time - 20;
+            if (PlayerPrefs.GetFloat("record") > 0)
+            {
+                if (recordTiempo > PlayerPrefs.GetFloat("record"))
+                {
+                    PlayerPrefs.SetFloat("record", recordTiempo);
+                }
+            }
+            else
+            {
+                PlayerPrefs.SetFloat("record", recordTiempo);
+            }
+
+            máxRecord.text = ("MáxRecord: " + PlayerPrefs.GetFloat("record").ToString("00.00"));
+            record.text = ("Actual record: " + (Time.time -20 ).ToString("00.00"));
             inputLocker = true;
             canvasBasic.SetActive(false);
             loose.SetActive(true);

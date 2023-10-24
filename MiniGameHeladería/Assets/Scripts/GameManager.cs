@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     //Animation:
     [SerializeField]
-    GameObject cup01, cup02, copyCup02;
+    GameObject cup01, cup02, copyCup02, camara;
     public float speed;
     bool animationON = false;
 
@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        camara.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("sonido");
         if (PlayerPrefs.GetInt("tutorial01") != 1)
         {
             canvasTuto.SetActive(true);
