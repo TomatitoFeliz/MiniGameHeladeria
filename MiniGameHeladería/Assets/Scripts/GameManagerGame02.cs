@@ -9,21 +9,15 @@ using System.Collections;
 public class GameManagerGame02 : MonoBehaviour
 {
     int maquina;
-    int player01 = 2;
-    int player02 = 2;
+    int jugador01 = 2;
+    int jugador02 = 2;
     bool results = false;
     public float timer = 5f;
     private float timerActive;
 
+    //Gameplay:
     [SerializeField]
-    GameObject win, loose, luzB, luzR, luzY, butonB01, butonB02, butonR01, butonR02, butonY01, butonY02, canvasBasic, canvasTuto;
-
-    //Animation:
-    [SerializeField]
-    GameObject cup01, cup02, copyCup02, camara;
-    bool animationON = false;
-
-    bool inputLocker;
+    GameObject win, loose, luzB, luzR, luzY, butonB01, butonB02, butonR01, butonR02, butonY01, butonY02, canvasBasic;    
     [SerializeField]
     UnityEngine.UI.Image redMI;
     [SerializeField]
@@ -31,8 +25,30 @@ public class GameManagerGame02 : MonoBehaviour
     [SerializeField]
     Material normal, blue, red, yellow;
 
+    //Animation:
+    [SerializeField]
+    GameObject cup01, cup02, copyCup02, camara;
+    bool animationON = false;
+
+    //Sonido:
+    bool alreadyLoose = false;
+    bool alreadyWin = false;
+    [SerializeField]
+    AudioSource reproductorSonido;
+    [SerializeField]
+    AudioClip victoriaClip, derrotaClip, bebidaClip;
+
+    //Tutorial:
+    bool inputLocker;
+    [SerializeField]
+    GameObject canvasTuto;
+
+
     void Start()
     {
+        //Sonido:
+        reproductorSonido.volume = PlayerPrefs.GetFloat("sonido");
+
         camara.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("sonido");
         if (PlayerPrefs.GetInt("tutorial02") != 1)
         {
@@ -42,29 +58,16 @@ public class GameManagerGame02 : MonoBehaviour
             Time.timeScale = 0f;
         }
 
-        luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(false);
-
-        timerActive = timer;
+        //Gameplay:
         maquina = Random.Range(2, 8);
 
+        luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(false);
         win.SetActive(false);
         loose.SetActive(false);
 
+        timerActive = timer;
         timerSlider.minValue = 0;
         timerSlider.maxValue = timerActive;
-    }
-
-    IEnumerator Win()
-    {
-        timerActive = 40;
-        canvasBasic.SetActive(false);
-        win.SetActive(true);
-        results = true;
-        PlayerPrefs.SetInt("ganado02", 1);
-
-        yield return new WaitForSeconds(3);
-
-        SceneManager.LoadScene("Game03");
     }
 
     void Update()
@@ -95,7 +98,7 @@ public class GameManagerGame02 : MonoBehaviour
             timerActive -= Time.deltaTime;
         }
 
-        if (timerActive < 0)
+        if (timerActive < 0 && alreadyLoose != true)
         {
             Loose();
         }
@@ -105,6 +108,8 @@ public class GameManagerGame02 : MonoBehaviour
         }
         void Loose()
         {
+            alreadyLoose = true;
+            reproductorSonido.PlayOneShot(derrotaClip);
             inputLocker = true;
             canvasBasic.SetActive(false);
             loose.SetActive(true);
@@ -115,67 +120,67 @@ public class GameManagerGame02 : MonoBehaviour
         //Sistema de Gameplay:
         if (Input.GetKeyDown(KeyCode.Q) & results == false && inputLocker != true)
         {
-            if (player01 != 4)
+            if (jugador01 != 4)
             {
-                player01++;
+                jugador01++;
             }
-            else if (player01 == 4)
+            else if (jugador01 == 4)
             {
-                player01 = 2;
+                jugador01 = 2;
             }
         }
         if (Input.GetKeyDown(KeyCode.A) & results == false && inputLocker != true)
         {
-            if (player01 != 2)
+            if (jugador01 != 2)
             {
-                player01--;
+                jugador01--;
             }
-            else if (player01 == 2)
+            else if (jugador01 == 2)
             {
-                player01 = 4;
+                jugador01 = 4;
             }
         }
 
         if (Input.GetKeyDown(KeyCode.W) & results == false && inputLocker != true)
         {
-            if (player02 != 4)
+            if (jugador02 != 4)
             {
-                player02++;
+                jugador02++;
             }
-            else if (player02 == 4)
+            else if (jugador02 == 4)
             {
-                player02 = 2;
+                jugador02 = 2;
             }
         }
         if (Input.GetKeyDown(KeyCode.S) & results == false && inputLocker != true)
         {
-            if (player02 != 2)
+            if (jugador02 != 2)
             {
-                player02--;
+                jugador02--;
             }
-            else if (player02 == 2)
+            else if (jugador02 == 2)
             {
-                player02 = 4;
+                jugador02 = 4;
             }
         }
 
         if (Input.GetKeyDown(KeyCode.E) & results == false && inputLocker != true)
         {
-            if (maquina != (player01 + player02) && player01 != player02)
+            if (maquina != (jugador01 + jugador02) && jugador01 != jugador02)
             {
                 Loose();
             }
-            else if (maquina != 2 && maquina != 3 && maquina != 4 && maquina == (player01 + player02) && player01 != player02)
+            else if (maquina != 2 && maquina != 3 && maquina != 4 && maquina == (jugador01 + jugador02) && jugador01 != jugador02)
             {
-                CupAnimation();
+                CorrectAnswer();
                 animationON = true;
             }
-            else if (player01 == player02 && player01 == maquina)
+            else if (jugador01 == jugador02 && jugador01 == maquina)
             {
-                CupAnimation();
+                CorrectAnswer();
                 animationON = true;
             }
-            else if (player01 == player02 && player01 != maquina)
+            else if (jugador01 == jugador02 && jugador01 != maquina)
             {
                 Loose();
             }
@@ -207,66 +212,68 @@ public class GameManagerGame02 : MonoBehaviour
             redMI.color = Color.green;
         }
 
-        if (player01 == 2)
+        if (jugador01 == 2)
         {
             butonB01.GetComponent<MeshRenderer>().material = normal; butonR01.GetComponent<MeshRenderer>().material = red; butonY01.GetComponent<MeshRenderer>().material = normal;
             luzR.SetActive(true);
         }
-        else if (player02 != 2)
+        else if (jugador02 != 2)
         {
             luzR.SetActive(false);
         }
-        if (player01 == 3)
+        if (jugador01 == 3)
         {
             butonB01.GetComponent<MeshRenderer>().material = normal; butonR01.GetComponent<MeshRenderer>().material = normal; butonY01.GetComponent<MeshRenderer>().material = yellow;
             luzY.SetActive(true);
         }
-        else if (player02 != 3)
+        else if (jugador02 != 3)
         {
             luzY.SetActive(false);
         }
-        if (player01 == 4)
+        if (jugador01 == 4)
         {
             butonB01.GetComponent<MeshRenderer>().material = blue; butonR01.GetComponent<MeshRenderer>().material = normal; butonY01.GetComponent<MeshRenderer>().material = normal;
             luzB.SetActive(true);
         }
-        else if (player02 != 4)
+        else if (jugador02 != 4)
         {
             luzB.SetActive(false);
         }
 
-        if (player02 == 2)
+        if (jugador02 == 2)
         {
             butonB02.GetComponent<MeshRenderer>().material = normal; butonR02.GetComponent<MeshRenderer>().material = red; butonY02.GetComponent<MeshRenderer>().material = normal;
             luzR.SetActive(true);
         }
-        else if (player01 != 2)
+        else if (jugador01 != 2)
         {
             luzR.SetActive(false);
         }
-        if (player02 == 3)
+        if (jugador02 == 3)
         {
             butonB02.GetComponent<MeshRenderer>().material = normal; butonR02.GetComponent<MeshRenderer>().material = normal; butonY02.GetComponent<MeshRenderer>().material = yellow;
             luzY.SetActive(true);
         }
-        else if (player01 != 3)
+        else if (jugador01 != 3)
         {
             luzY.SetActive(false);
         }
-        if (player02 == 4)
+        if (jugador02 == 4)
         {
             butonB02.GetComponent<MeshRenderer>().material = blue; butonR02.GetComponent<MeshRenderer>().material = normal; butonY02.GetComponent<MeshRenderer>().material = normal;
             luzB.SetActive(true);
         }
-        else if (player01 != 4)
+        else if (jugador01 != 4)
         {
             luzB.SetActive(false);
         }
     }
 
-    void CupAnimation()
+    void CorrectAnswer()
     {
+        reproductorSonido.PlayOneShot(bebidaClip);
         inputLocker = true;
+
         LeanTween.move(cup01, new Vector3(-2.936f, 0.026f, 8.97f), 1.5f).setOnComplete(() =>
         {
             Destroy(cup01);
@@ -284,6 +291,27 @@ public class GameManagerGame02 : MonoBehaviour
             animationON = false;
             inputLocker = false;
         });
+    }
+    IEnumerator Win()
+    {
+        if (alreadyWin != true)
+        {
+            WinSound();
+        }
+        timerActive = 40;
+        canvasBasic.SetActive(false);
+        win.SetActive(true);
+        results = true;
+        PlayerPrefs.SetInt("ganado02", 1);
+
+        yield return new WaitForSeconds(3);
+
+        SceneManager.LoadScene("Game03");
+    }
+    public void WinSound()
+    {
+        reproductorSonido.PlayOneShot(victoriaClip);
+        alreadyWin = true;
     }
 
     //Loose:

@@ -9,9 +9,7 @@ public class MenúPincipalGameManager : MonoBehaviour
     [SerializeField]
     Button xButton, menuButton, tutorialB, sonidoB, salirB;
     [SerializeField]
-    GameObject tutorialCanvas, sonidoCanvas, recuadroMenu, fondoLvlSelection, lvl1, lvl2, lvl3, infinite, xButtonLvl;
-    [SerializeField]
-    GameObject lvl1TutoI, lvl2TutoI, lvl3TutoI, tutorialI, sonidoI, salirI, cruzI, lvl1Tuto, lvl2Tuto, lvl3Tuto, flecha, tutorial, sonido, salir, cruz, recuadroMenuTutoriales, tutorial01, tutorial02, tutorial03, camara;
+    GameObject tutorialCanvas, sonidoCanvas, recuadroMenu, fondoLvlSelection, lvl1, lvl2, lvl3, infinite, xButtonLvl, lvl1TutoI, lvl2TutoI, lvl3TutoI, tutorialI, sonidoI, salirI, cruzI, lvl1Tuto, lvl2Tuto, lvl3Tuto, flecha, tutorial, sonido, salir, cruz, recuadroMenuTutoriales, tutorial01, tutorial02, tutorial03, camara;
     [SerializeField]
     Image lvlFondo;
     [SerializeField]
@@ -57,7 +55,6 @@ public class MenúPincipalGameManager : MonoBehaviour
             infinite.SetActive(true);
             xButtonLvl.SetActive(true);
         });
-        //.LoadScene("Game01");
     }
     public void ExitLevels()
     {
@@ -196,6 +193,7 @@ public class MenúPincipalGameManager : MonoBehaviour
         });
     }
     
+    //Buttons:
     public void Tutorial01()
     {
         tutorial01.SetActive(true);
@@ -260,6 +258,7 @@ public class MenúPincipalGameManager : MonoBehaviour
 
     private void Update()
     {
+        //LVL Unlock:
         record.text = ("Infinite mode actual record: " + PlayerPrefs.GetFloat("record").ToString("00.00"));
         if (PlayerPrefs.GetInt("ganado01") == 1)
         {
@@ -274,6 +273,7 @@ public class MenúPincipalGameManager : MonoBehaviour
             infinite.GetComponent<Button>().interactable = true;
         }
 
+        //TutorialUnlock:
         if (PlayerPrefs.GetInt("tutorial01") == 1)
         {
             lvl1Tuto.GetComponent<Button>().interactable = true;

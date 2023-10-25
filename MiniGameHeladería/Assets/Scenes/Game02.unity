@@ -399,7 +399,7 @@ GameObject:
   - component: {fileID: 186844155}
   - component: {fileID: 186844154}
   m_Layer: 5
-  m_Name: Repeat
+  m_Name: Repetir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -998,7 +998,7 @@ GameObject:
   - component: {fileID: 449743285}
   - component: {fileID: 449743284}
   m_Layer: 5
-  m_Name: Type of drink
+  m_Name: TipoBebida
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1148,7 +1148,7 @@ GameObject:
   - component: {fileID: 563022996}
   - component: {fileID: 563022995}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1299,7 +1299,7 @@ GameObject:
   - component: {fileID: 678201376}
   - component: {fileID: 678201375}
   m_Layer: 5
-  m_Name: Loose
+  m_Name: Derrota
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1390,6 +1390,134 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &797181559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 797181561}
+  - component: {fileID: 797181560}
+  m_Layer: 0
+  m_Name: Reproducor de sonidos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &797181560
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797181559}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &797181561
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797181559}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.827, y: 0.381, z: 6.475}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &827714817
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1667,7 +1795,7 @@ GameObject:
   - component: {fileID: 1002659937}
   - component: {fileID: 1002659936}
   m_Layer: 5
-  m_Name: Loose.txt
+  m_Name: Derrota.txt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1712,7 +1840,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: YOU LOOSE
+  m_text: PERDISTE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2249,7 +2377,7 @@ GameObject:
   - component: {fileID: 1153620809}
   - component: {fileID: 1153620808}
   m_Layer: 5
-  m_Name: Win
+  m_Name: Victoria
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2294,7 +2422,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: YOU WIN
+  m_text: GANASTE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2383,7 +2511,7 @@ GameObject:
   - component: {fileID: 1202536996}
   - component: {fileID: 1202536995}
   m_Layer: 5
-  m_Name: Background 2
+  m_Name: Fondo 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2533,7 +2661,7 @@ GameObject:
   - component: {fileID: 1301208653}
   - component: {fileID: 1301208652}
   m_Layer: 5
-  m_Name: SliderHelado
+  m_Name: Fondo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2923,7 +3051,7 @@ GameObject:
   - component: {fileID: 1494014983}
   - component: {fileID: 1494014982}
   m_Layer: 5
-  m_Name: Background
+  m_Name: Fondo1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2999,7 +3127,7 @@ GameObject:
   - component: {fileID: 1507703430}
   - component: {fileID: 1507703429}
   m_Layer: 5
-  m_Name: Exit
+  m_Name: Salir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3165,7 +3293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1640264931}
   m_Layer: 0
-  m_Name: Lights
+  m_Name: Luces
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3253,7 +3381,10 @@ MonoBehaviour:
   cup02: {fileID: 0}
   copyCup02: {fileID: 8195392098922687628, guid: 5de77aad7eca8124b861a6fba8d53d76, type: 3}
   camara: {fileID: 1048861260}
-  speed: 0
+  reproductorSonido: {fileID: 797181560}
+  victoriaClip: {fileID: 8300000, guid: 99071795df4522741a87bfb34c4b4fa3, type: 3}
+  derrotaClip: {fileID: 8300000, guid: 137db7e2ddd21f941b362d9e0ca2dc12, type: 3}
+  bebidaClip: {fileID: 8300000, guid: 2cc686654b539c74e912096448bc4e8d, type: 3}
   redMI: {fileID: 449743284}
   timerSlider: {fileID: 1778782222}
   normal: {fileID: 2100000, guid: 9f2d8c34cbbf0c04d89e18911f8d8f35, type: 2}
@@ -3317,9 +3448,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Exit
-
-'
+  m_text: Salir
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3407,7 +3536,7 @@ GameObject:
   - component: {fileID: 1778782221}
   - component: {fileID: 1778782222}
   m_Layer: 5
-  m_Name: Timer
+  m_Name: Temporizador
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3617,7 +3746,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Repeat
+  m_text: Repetir
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3707,7 +3836,7 @@ GameObject:
   - component: {fileID: 1933766421}
   - component: {fileID: 1933766420}
   m_Layer: 5
-  m_Name: CanvasResults
+  m_Name: CanvasResultados
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3913,7 +4042,7 @@ GameObject:
   - component: {fileID: 1994737628}
   - component: {fileID: 1994737627}
   m_Layer: 5
-  m_Name: TextCloud
+  m_Name: NuveTexto
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3989,7 +4118,7 @@ GameObject:
   - component: {fileID: 2075521896}
   - component: {fileID: 2075521895}
   m_Layer: 5
-  m_Name: Press-Space
+  m_Name: Espacio para empezar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4034,7 +4163,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Space to Start
+  m_text: Espacio para empezar
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd1aaef286e6a124cb998b9947c7fc2d, type: 2}
   m_sharedMaterial: {fileID: -9044386341276609246, guid: cd1aaef286e6a124cb998b9947c7fc2d, type: 2}
@@ -4344,6 +4473,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1048861265}
+  - {fileID: 797181561}
   - {fileID: 1723427998}
   - {fileID: 1933766423}
   - {fileID: 1948097669}

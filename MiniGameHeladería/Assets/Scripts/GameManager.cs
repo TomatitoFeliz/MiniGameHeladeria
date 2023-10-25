@@ -11,21 +11,14 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
     int maquina;
-    int player = 1;
+    int jugador = 1;
     bool results = false;
     public float timer = 5f;
     private float timerActive;
 
+    //Gameplay:
     [SerializeField]
-    GameObject win, loose, luzB, luzR, luzY, butonB, butonR, butonY, canvasBasic, canvasTuto;
-
-    //Animation:
-    [SerializeField]
-    GameObject cup01, cup02, copyCup02, camara;
-    public float speed;
-    bool animationON = false;
-
-    bool inputLocker;
+    GameObject win, loose, luzB, luzR, luzY, butonB, butonR, butonY, canvasBasic;    
     [SerializeField]
     UnityEngine.UI.Image redMI;
     [SerializeField]
@@ -33,9 +26,32 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Material normal, blue, red, yellow;
 
+    //Animation:
+    [SerializeField]
+    GameObject cup01, cup02, copyCup02, camara;
+    bool animationON = false;
+
+    //Sonido:
+    bool alreadyLoose = false;
+    bool alreadyWin = false;
+    [SerializeField]
+    AudioSource reproductorSonido;
+    [SerializeField]
+    AudioClip victoriaClip, derrotaClip, bebidaClip;
+
+    //Tutorial:
+    bool inputLocker;
+    [SerializeField]
+    GameObject canvasTuto;
+
+
     void Start()
     {
+        //Sonido:
+        reproductorSonido.volume = PlayerPrefs.GetFloat("sonido");
         camara.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("sonido");
+
+        //Tutorial:
         if (PlayerPrefs.GetInt("tutorial01") != 1)
         {
             canvasTuto.SetActive(true);
@@ -44,29 +60,16 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0f;
         }
 
-        luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(false);
-
-        timerActive = timer;
+        //Gameplay:
         maquina = Random.Range(0, 3);
 
+        luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(false);
         win.SetActive(false);
         loose.SetActive(false);
 
+        timerActive = timer;
         timerSlider.minValue = 0;
         timerSlider.maxValue = timerActive;
-    }
-    
-    IEnumerator Win()
-    {
-        timerActive = 40;
-        canvasBasic.SetActive(false);
-        win.SetActive(true);
-        results = true;
-        PlayerPrefs.SetInt("ganado01", 1);
-
-        yield return new WaitForSeconds(3);
-
-        SceneManager.LoadScene("Game02");
     }
 
     void Update()
@@ -97,7 +100,7 @@ public class GameManager : MonoBehaviour
             timerActive -= Time.deltaTime;
         }
 
-        if (timerActive < 0)
+        if (timerActive < 0 && alreadyLoose != true)
         {
             Loose();
         }
@@ -107,6 +110,8 @@ public class GameManager : MonoBehaviour
         }
         void Loose()
         {
+            alreadyLoose = true;
+            reproductorSonido.PlayOneShot(derrotaClip);
             inputLocker = true;
             canvasBasic.SetActive(false);
             loose.SetActive(true);
@@ -117,35 +122,35 @@ public class GameManager : MonoBehaviour
         //Sistema de Gameplay:
         if (Input.GetKeyDown(KeyCode.Q) & results == false && inputLocker != true)
         {
-            if (player != 2)
+            if (jugador != 2)
             {
-                player++;
+                jugador++;
             }
-            else if (player == 2)
+            else if (jugador == 2)
             {
-                player = 0;
+                jugador = 0;
             }
         }
         if (Input.GetKeyDown(KeyCode.A) & results == false && inputLocker != true)
         {
-            if (player != 0)
+            if (jugador != 0)
             {
-                player--;
+                jugador--;
             }
-            else if (player == 0)
+            else if (jugador == 0)
             {
-                player = 2;
+                jugador = 2;
             }
         }
         if (Input.GetKeyDown(KeyCode.E) & results == false && inputLocker != true)
         {
-            if (maquina != player)
+            if (maquina != jugador)
             {
                 Loose();
             }
-            else if (maquina == player)
+            else if (maquina == jugador)
             {
-                CupAnimation();
+                CorrectAnswer();
                 animationON = true;
             }
         }
@@ -164,32 +169,39 @@ public class GameManager : MonoBehaviour
             redMI.color = Color.blue;
         }
 
-        if (player == 0)
+        if (jugador == 0)
         {
             butonB.GetComponent<MeshRenderer>().material = normal; butonR.GetComponent<MeshRenderer>().material = red; butonY.GetComponent<MeshRenderer>().material = normal;
             luzB.SetActive(false); luzR.SetActive(true); luzY.SetActive(false);
         }
-        else if (player == 1)
+        else if (jugador == 1)
         {
             butonB.GetComponent<MeshRenderer>().material = normal; butonR.GetComponent<MeshRenderer>().material = normal; butonY.GetComponent<MeshRenderer>().material = yellow;
             luzB.SetActive(false); luzR.SetActive(false); luzY.SetActive(true);
         }
-        else if (player == 2)
+        else if (jugador == 2)
         {
             butonB.GetComponent<MeshRenderer>().material = blue; butonR.GetComponent<MeshRenderer>().material = normal; butonY.GetComponent<MeshRenderer>().material = normal;
             luzB.SetActive(true); luzR.SetActive(false); luzY.SetActive(false);
         }
     }
-    void CupAnimation()
+
+    //Correct:
+    void CorrectAnswer()
     {
+        reproductorSonido.PlayOneShot(bebidaClip);
         inputLocker = true;
-        LeanTween.move(cup01, new Vector3(-2.936f, 0.026f, 8.97f), 1.5f).setOnComplete(() => {
+
+        LeanTween.move(cup01, new Vector3(-2.936f, 0.026f, 8.97f), 1.5f).setOnComplete(() => 
+        {
             Destroy(cup01);
         });
         Instantiate(copyCup02, new Vector3(1.192f, 0.026f, 8.97f), Quaternion.identity);
         cup02 = GameObject.Find("BasoGranizado(Clone)");
         cup02.name = "cup02";
-        LeanTween.move(cup02, new Vector3(-0.81f, 0.026f, 8.97f), 1.5f).setOnComplete(() => {
+
+        LeanTween.move(cup02, new Vector3(-0.81f, 0.026f, 8.97f), 1.5f).setOnComplete(() => 
+        {
             cup01 = cup02;
             maquina = Random.Range(0, 3);
             timer = timer - 0.25f;
@@ -198,6 +210,27 @@ public class GameManager : MonoBehaviour
             animationON = false;
             inputLocker = false;
         });
+    }
+    IEnumerator Win()
+    {
+        if (alreadyWin != true)
+        {
+            WinSound();
+        }
+        timerActive = 40;
+        canvasBasic.SetActive(false);
+        win.SetActive(true);
+        results = true;
+        PlayerPrefs.SetInt("ganado01", 1);
+
+        yield return new WaitForSeconds(3);
+
+        SceneManager.LoadScene("Game02");
+    }
+    public void WinSound()
+    {
+        reproductorSonido.PlayOneShot(victoriaClip);
+        alreadyWin = true;
     }
 
     //Loose:
